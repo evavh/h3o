@@ -937,6 +937,16 @@ impl CellIndex {
         })
     }
 
+    /// Returns a lazy iterator (always using safe)
+    pub fn grid_disk_iter(self, k: u32) -> impl Iterator<Item = Self> {
+        if k == 0 {
+            return Either::Left(iter::once(self));
+        }
+        Either::Right(
+            grid::DiskDistancesSafe::new(self, k).map(|(cell, _)| cell),
+        )
+    }
+
     /// Produce cells within grid distance `k` of the cell.
     ///
     /// This function is a convenience helper that tries
